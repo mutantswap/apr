@@ -8,7 +8,7 @@
       },
       {
         "internalType": "contract IERC20",
-        "name": "_tri",
+        "name": "_mc",
         "type": "address"
       },
       {
@@ -199,7 +199,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "accTriPerShare",
+        "name": "accMCPerShare",
         "type": "uint256"
       }
     ],
@@ -284,7 +284,7 @@
   },
   {
     "inputs": [],
-    "name": "TRI",
+    "name": "MC",
     "outputs": [
       {
         "internalType": "contract IERC20",
@@ -431,6 +431,19 @@
   },
   {
     "inputs": [],
+    "name": "mcPerBlock",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "owner",
     "outputs": [
       {
@@ -455,7 +468,7 @@
         "type": "address"
       }
     ],
-    "name": "pendingTri",
+    "name": "pendingMC",
     "outputs": [
       {
         "internalType": "uint256",
@@ -478,7 +491,7 @@
     "outputs": [
       {
         "internalType": "uint128",
-        "name": "accTriPerShare",
+        "name": "accMCPerShare",
         "type": "uint128"
       },
       {
@@ -589,19 +602,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "triPerBlock",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -615,7 +615,7 @@
         "components": [
           {
             "internalType": "uint128",
-            "name": "accTriPerShare",
+            "name": "accMCPerShare",
             "type": "uint128"
           },
           {

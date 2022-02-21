@@ -6,15 +6,15 @@ import requests
 from urllib import parse
 
 # TODO: Change address to mainnet
-FACTORY_ADDRESS = "0xc66F594268041dB60507F00703b152492fb176E7"
-TRIMAKER_ADDRESS = "0xe793455c9728fc91A3E5a33FAfF9eB2F228aE151"
-TRIBAR_ADDRESS = "0x802119e4e253D5C19aA06A5d567C5a41596D6803"
-CHEF_ADDRESS = "0x1f1Ed214bef5E83D8f5d0eB5D7011EB965D0D79B"
-CHEFV2_ADDRESS = "0x3838956710bcc9D122Dd23863a0549ca8D5675D6"
-TRI_ADDRESS = "0xFa94348467f64D5A457F75F8bc40495D33c65aBB"
-WNEAR_ADDRESS = "0xC42C30aC6Cc15faC9bD938618BcaA1a1FaE8501d"
+FACTORY_ADDRESS = "0xB934cF2B1eBFbC742B403568Db1Ef1B8EAD3fC56"
+MCMAKER_ADDRESS = "0x5B2B3f681939F55021D78f2e22cCba1342f1821F"
+MCBAR_ADDRESS = "0x2cf8D731898AF2976e23089fc33FbA7F740c3B4c"
+CHEF_ADDRESS = "0x339E5B27Fd074dF8090e2E3d65b27B8628c274a3"
+CHEFV2_ADDRESS = "0xd616ab1aa6f629cE23476BA6133F47dC58Ddbfa9"
+MC_ADDRESS = "0x46B9C67951B9356A7b64F3d3460512c77F570d6D"
+WNEAR_ADDRESS = "0xC16e609F7e486674358D2F45F294A26f18930D40"
 AURORA_ADDRESS = "0x8BEc47865aDe3B172A928df8f990Bc7f2A3b9f79"
-USDC_ADDRESS = "0xB12BFcA5A55806AaF64E99521918A4bf0fC40802"
+USDC_ADDRESS = "0x4B21F10300C9d87D4B96c58c725eEb6907EB8CbE"
 USDT_ADDRESS = "0x4988a896b1227218e4A686fdE5EabdcAbd91571f"
 WETH_ADDRESS = "0xC9BdeEd33CD01541e1eeD10f90519d2C06Fe3feB"
 WBTC_ADDRESS = "0xF4eB217Ba2454613b15dBdea6e5f22276410e89e"
@@ -32,11 +32,11 @@ META_ADDRESS = "0xc21Ff01229e982d7c8b8691163B0A3Cb8F357453"
 XNL_ADDRESS = "0x7cA1C28663b76CFDe424A9494555B94846205585"
 GBA_ADDRESS = "0xc2ac78FFdDf39e5cD6D83bbD70c1D67517C467eF"
 
-### TLP addresses
-WNEAR_USDC = "0x20F8AeFB5697B77E0BB835A8518BE70775cdA1b0"
+### MSLP addresses
+WNEAR_USDC = "0x62c1e1dadEbDEDa9FF397a48239D2D0a1E4E71C8"
 WETH_USDC = "0x2F41AF687164062f118297cA10751F4b55478ae1"
-WNEAR_TRI = "0x84b123875F0F36B966d0B6Ca14b31121bd9676AD"
-TRI_AURORA = "0xd1654a7713617d41A8C9530Fb9B948d00e162194"
+WNEAR_MC = "0x43413cAB62F19e2B347dC50504bf21fE0DCE3790"
+MC_AURORA = "0xd1654a7713617d41A8C9530Fb9B948d00e162194"
 MECHA_WNEAR = "0xd62f9ec4C4d323A0C111d5e78b77eA33A2AA862f"
 META_WNEAR = "0xa8CAaf35c0136033294dD286A14051fBf37aed07"
 GBA_USDT = "0x7B273238C6DD0453C160f305df35c350a123E505"
@@ -72,7 +72,7 @@ def init_tlp(w3, lpAddress):
 def init_tri_maker(w3):
     with open('abi/triMaker.json') as json_file:
         return w3.eth.contract(
-            address=TRIMAKER_ADDRESS,
+            address=MCMAKER_ADDRESS,
             abi=json.load(json_file)
         )
 
@@ -123,14 +123,14 @@ def getReserveInUsdc(w3, tlp, triUsdcRatio):
             wethReserveInWethUsdcPair = reservesWethUsdc[1]
             usdcReserveInWethUsdcPair = reservesWethUsdc[0]
         return reserveInWeth*usdcReserveInWethUsdcPair/wethReserveInWethUsdcPair
-    elif (t0 == TRI_ADDRESS or t1 == TRI_ADDRESS ):
-        if t0 == TRI_ADDRESS:
+    elif (t0 == MC_ADDRESS or t1 == MC_ADDRESS ):
+        if t0 == MC_ADDRESS:
             reserveInTri = reserves[0]*2
         else:
             reserveInTri = reserves[1]*2
         return reserveInTri/triUsdcRatio
-    elif (t0 == TRIBAR_ADDRESS or t1 == TRIBAR_ADDRESS ):
-        if t0 == TRIBAR_ADDRESS:
+    elif (t0 == MCBAR_ADDRESS or t1 == MCBAR_ADDRESS ):
+        if t0 == MCBAR_ADDRESS:
             reserveInXTri = reserves[0]*2
         else:
             reserveInXTri = reserves[1]*2
@@ -180,23 +180,23 @@ def getGbaUsdcRatio(w3):
         gbaUsdcRatio = reserves[1]/reserves[0]
     return gbaUsdcRatio
 
-def getTriUsdcRatio(w3, wnearUsdcRatio):
-    triWnearPair = init_tlp(w3, WNEAR_TRI)
-    t1 = triWnearPair.functions.token1().call()
-    t0 = triWnearPair.functions.token0().call()
-    reserves = triWnearPair.functions.getReserves().call()
+def getMCUsdcRatio(w3, wnearUsdcRatio):
+    mcWnearPair = init_tlp(w3, WNEAR_MC)
+    t1 = mcWnearPair.functions.token1().call()
+    t0 = mcWnearPair.functions.token0().call()
+    reserves = mcWnearPair.functions.getReserves().call()
     if t0 == WNEAR_ADDRESS:
-        triWnearRatio = reserves[1]/reserves[0]
+        mcWnearRatio = reserves[1]/reserves[0]
     else:
-        triWnearRatio = reserves[0]/reserves[1]
-    return triWnearRatio * wnearUsdcRatio
+        mcWnearRatio = reserves[0]/reserves[1]
+    return mcWnearRatio * wnearUsdcRatio
 
 def getAuroraUsdcRatio(w3, triUsdcRatio):
-    triAuroraPair = init_tlp(w3, TRI_AURORA)
+    triAuroraPair = init_tlp(w3, MC_AURORA)
     t1 = triAuroraPair.functions.token1().call()
     t0 = triAuroraPair.functions.token0().call()
     reserves = triAuroraPair.functions.getReserves().call()
-    if t0 == TRI_ADDRESS:
+    if t0 == MC_ADDRESS:
         triAuroraRatio = reserves[1]/reserves[0]
     else:
         triAuroraRatio = reserves[0]/reserves[1]
@@ -229,10 +229,10 @@ def getMetaUsdcRatio(w3, wnearUsdcRatio):
     return metaWnearPair * wnearUsdcRatio
 
 def getTriXTriRatio(w3):
-    xtri = init_erc20(w3, TRIBAR_ADDRESS)
-    tri = init_erc20(w3, TRI_ADDRESS)
+    xtri = init_erc20(w3, MCBAR_ADDRESS)
+    tri = init_erc20(w3, MC_ADDRESS)
     xtri_supply = xtri.functions.totalSupply().call()
-    tri_locked = tri.functions.balanceOf(TRIBAR_ADDRESS).call()
+    tri_locked = tri.functions.balanceOf(MCBAR_ADDRESS).call()
     return tri_locked/xtri_supply
 
 
