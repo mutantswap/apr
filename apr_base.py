@@ -25,8 +25,8 @@ v1_pools = {
     0: "0xaF00ba46B3e7Fea7E39fF320534677a51B88D39C",
     1: "0x43413cAB62F19e2B347dC50504bf21fE0DCE3790",
     2: "0x62c1e1dadEbDEDa9FF397a48239D2D0a1E4E71C8",
-    # 3: "0x2fe064B6c7D274082aa5d2624709bC9AE7D16C77",
-    # 4: "0xbc8A244e8fb683ec1Fd6f88F3cc6E565082174Eb",
+    3: "0x0348fA0B2289beFa36956F3C95135572C2bc61B3",
+    4: "0xA6335CCdAa874bb9E0cffDdA4e49F3186435B320",
     # 5: "0x84b123875F0F36B966d0B6Ca14b31121bd9676AD",
     # 6: "0x5eeC60F348cB1D661E4A5122CF4638c7DB7A886e",
 }
@@ -132,7 +132,7 @@ def apr_base():
     # print(f"GBA USDC Ratio: {gbaUsdcRatio/10**12}")
 
     for id, address in v1_pools.items():
-        if id == 0:
+        if id < 3:
             data.append(
                 {
                     "id": id,
@@ -154,16 +154,23 @@ def apr_base():
         poolInfo = chef.functions.poolInfo(id).call()
         assert poolInfo[0].lower() == address.lower()
         allocPoint = poolInfo[1]
+        print("V1 allocPoint", allocPoint)
         reserveInUSDC = getReserveInUsdc(w3, tlp, mcUsdcRatio)
+        print("V1 reserveInUSDC", reserveInUSDC)
         totalSupply = tlp.functions.totalSupply().call()
+        print("V1 totalSupply", totalSupply)
         totalStaked = tlp.functions.balanceOf(chef.address).call()
+        print("V1 totalStaked", totalStaked)
         totalStakedInUSDC = getTotalStakedInUSDC(totalStaked, totalSupply, reserveInUSDC)
+        print("V1 totalStakedInUSDC", totalStakedInUSDC)
         totalSecondRewardRate = (
             mcPerBlock * allocPoint / (totalAllocPoint * 10 ** decimals)
         )  # TODO: update to return base 10 values
+        print("V1 totalSecondRewardRate", totalSecondRewardRate)
         totalWeeklyRewardRate = (
             3600 * 24 * 7 * totalSecondRewardRate
         )  # TODO: update to return base 10 values
+        print("V1 totalWeeklyRewardRate", totalWeeklyRewardRate)
 
         # Chef V1
         data.append(
