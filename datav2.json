@@ -1,5 +1,18 @@
 [
     {
+        "id": 0,
+        "poolId": 0,
+        "lpAddress": "0xaF00ba46B3e7Fea7E39fF320534677a51B88D39C",
+        "totalSupply": 0,
+        "totalStaked": 0,
+        "totalStakedInUSD": 0,
+        "totalRewardRate": 0,
+        "allocPoint": 0,
+        "apr": 0,
+        "apr2": 0,
+        "chefVersion": "v1"
+    },
+    {
         "id": 1,
         "poolId": 1,
         "lpAddress": "0x43413cAB62F19e2B347dC50504bf21fE0DCE3790",

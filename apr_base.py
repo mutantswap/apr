@@ -133,6 +133,21 @@ def apr_base():
 
     for id, address in v1_pools.items():
         if id == 0:
+            data.append(
+                {
+                    "id": id,
+                    "poolId": id,
+                    "lpAddress": address,
+                    "totalSupply": 0,
+                    "totalStaked": 0,
+                    "totalStakedInUSD": 0,
+                    "totalRewardRate": 0,
+                    "allocPoint": 0,
+                    "apr": 0,
+                    "apr2": 0,
+                    "chefVersion": "v1",
+                }
+            )
             continue
         print("V1 Reached here", address)
         tlp = init_tlp(w3, address)
