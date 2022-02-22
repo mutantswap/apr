@@ -63,25 +63,25 @@ tri_amount = 0
 initial_triBar_balance = tri.functions.balanceOf(TRIBAR_ADDRESS).call()
 current_time = time()
 
-with open('xtri.json') as json_file:
-    xtri_data = json.load(json_file)
+with open('xmc.json') as json_file:
+    xmc_data = json.load(json_file)
 
 for pair in pairs:
     tri_amount += convertFeesForPair(tri_maker, pair, w3, acct)
     print(tri_amount)
-    
+
 print(current_time, initial_triBar_balance, tri_amount)
 
 
-if xtri_data["timestamp"] != 0:
-    timedelta = current_time - xtri_data["timestamp"]
+if xmc_data["timestamp"] != 0:
+    timedelta = current_time - xmc_data["timestamp"]
     pr = tri_amount/initial_triBar_balance
     apr = pr*(3600*24*365)*100/timedelta
-    xtri_data["apr"] = apr    
+    xmc_data["apr"] = apr
 
-xtri_data["triBarTri"] = initial_triBar_balance
-xtri_data["mintedTri"] = tri_amount
-xtri_data["timestamp"] = current_time
+xmc_data["triBarTri"] = initial_triBar_balance
+xmc_data["mintedTri"] = tri_amount
+xmc_data["timestamp"] = current_time
 
-with open('xtri.json', 'w', encoding='utf-8') as f:
-    json.dump(xtri_data, f, ensure_ascii=False, indent=4)
+with open('xmc.json', 'w', encoding='utf-8') as f:
+    json.dump(xmc_data, f, ensure_ascii=False, indent=4)

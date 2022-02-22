@@ -1,9 +1,9 @@
-name: xtri 
+name: xmc
 on:
   workflow_dispatch:
 
 jobs:
-  xtri:
+  xmc:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -12,11 +12,11 @@ jobs:
           python-version: 3.x
       - name: Convert fees and calculate APR
         run: |
-          pip install -r requirements.txt 
-          python xtri.py
+          pip install -r requirements.txt
+          python xmc.py
       - name: Commit report
         run: |
           git config --global user.name 'Github Actions'
           git config --global user.email 'actions@noreply.github.com'
-          git commit -am "Update xTRI"
+          git commit -am "Update xMC"
           git push
