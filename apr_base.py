@@ -22,13 +22,14 @@ from utils import (
 
 
 v1_pools = {
-    0: "0xaF00ba46B3e7Fea7E39fF320534677a51B88D39C",
-    1: "0x43413cAB62F19e2B347dC50504bf21fE0DCE3790",
-    2: "0x62c1e1dadEbDEDa9FF397a48239D2D0a1E4E71C8",
-    3: "0x0348fA0B2289beFa36956F3C95135572C2bc61B3",
-    4: "0xA6335CCdAa874bb9E0cffDdA4e49F3186435B320",
-    # 5: "0x84b123875F0F36B966d0B6Ca14b31121bd9676AD",
-    # 6: "0x5eeC60F348cB1D661E4A5122CF4638c7DB7A886e",
+    0: "0x00dbf792f23D162Bcf84F9BC979CAc15025D9F8c", #MCO-fNear
+    1: "0x433FCcF7df0A8b8c31A31C74A6EA917aAB520d70", #fNear-fUSDC
+    # Old chef pools
+    # 0: "0xaF00ba46B3e7Fea7E39fF320534677a51B88D39C",
+    # 1: "0x43413cAB62F19e2B347dC50504bf21fE0DCE3790",
+    # 2: "0x62c1e1dadEbDEDa9FF397a48239D2D0a1E4E71C8",
+    # 3: "0x0348fA0B2289beFa36956F3C95135572C2bc61B3",
+    # 4: "0xA6335CCdAa874bb9E0cffDdA4e49F3186435B320",
 }
 
 v2_pools = {
@@ -132,23 +133,23 @@ def apr_base():
     # print(f"GBA USDC Ratio: {gbaUsdcRatio/10**12}")
 
     for id, address in v1_pools.items():
-        if id < 3:
-            data.append(
-                {
-                    "id": id,
-                    "poolId": id,
-                    "lpAddress": address,
-                    "totalSupply": 0,
-                    "totalStaked": 0,
-                    "totalStakedInUSD": 0,
-                    "totalRewardRate": 0,
-                    "allocPoint": 0,
-                    "apr": 0,
-                    "apr2": 0,
-                    "chefVersion": "v1",
-                }
-            )
-            continue
+        # if id < 3:
+        #     data.append(
+        #         {
+        #             "id": id,
+        #             "poolId": id,
+        #             "lpAddress": address,
+        #             "totalSupply": 0,
+        #             "totalStaked": 0,
+        #             "totalStakedInUSD": 0,
+        #             "totalRewardRate": 0,
+        #             "allocPoint": 0,
+        #             "apr": 0,
+        #             "apr2": 0,
+        #             "chefVersion": "v1",
+        #         }
+        #     )
+        #     continue
         print("V1 Reached here", address)
         tlp = init_tlp(w3, address)
         poolInfo = chef.functions.poolInfo(id).call()
@@ -163,6 +164,9 @@ def apr_base():
         print("V1 totalStaked", totalStaked)
         totalStakedInUSDC = getTotalStakedInUSDC(totalStaked, totalSupply, reserveInUSDC)
         print("V1 totalStakedInUSDC", totalStakedInUSDC)
+        print("V1 mcPerBlock", mcPerBlock)
+        print("V1 allocPoint", allocPoint)
+        print("V1 totalAllocPoint", totalAllocPoint)
         totalSecondRewardRate = (
             mcPerBlock * allocPoint / (totalAllocPoint * 10 ** decimals)
         )  # TODO: update to return base 10 values
@@ -192,7 +196,7 @@ def apr_base():
 
     #Get alloc point of dummy LP pool in Chef V1
     dummyLPPoolId = 0
-    dummyLPToken = "0xaF00ba46B3e7Fea7E39fF320534677a51B88D39C"
+    dummyLPToken = "0x00dbf792f23D162Bcf84F9BC979CAc15025D9F8c"
     dummyLpPoolInfo = chef.functions.poolInfo(dummyLPPoolId).call()
     assert dummyLpPoolInfo[0].lower() == dummyLPToken.lower()
     dummyLpAllocPoint = dummyLpPoolInfo[1]
