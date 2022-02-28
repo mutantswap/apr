@@ -17,11 +17,11 @@
         "poolId": 1,
         "lpAddress": "0x433FCcF7df0A8b8c31A31C74A6EA917aAB520d70",
         "totalSupply": 3162277660168379331998,
-        "totalStaked": 3162277660168379330998,
-        "totalStakedInUSD": 20000000.0,
+        "totalStaked": 632450000000000000000,
+        "totalStakedInUSD": 3999965.012346983,
         "totalRewardRate": 1512000.0,
         "allocPoint": 30,
-        "apr": 15.768,
+        "apr": 78.84068961267295,
         "apr2": 0,
         "chefVersion": "v1"
     }
