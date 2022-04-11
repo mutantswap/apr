@@ -24,5 +24,18 @@
         "apr": 29.023552026450567,
         "apr2": 0,
         "chefVersion": "v1"
+    },
+    {
+        "id": 2,
+        "poolId": 2,
+        "lpAddress": "0xd2D3EB8Ee7341B8a6AF8C499CF3DeC6c0a45fF27",
+        "totalSupply": 3000000000000000000,
+        "totalStaked": 0,
+        "totalStakedInUSD": 0.0,
+        "totalRewardRate": 1296000.0,
+        "allocPoint": 45,
+        "apr": 0,
+        "apr2": 0,
+        "chefVersion": "v1"
     }
 ]
