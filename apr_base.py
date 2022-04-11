@@ -253,7 +253,7 @@ def apr_base():
         totalStakedInUSDC = getTotalStakedInUSDC(totalStaked, totalSupply, reserveInUSDC)
         totalSecondRewardRate = (
             dummyLpTotalSecondRewardRate * allocPoint / (totalAllocPointV2)
-        )  # Taking MCO allocation to dummy LP in chef v1 as mco per block for chef V2
+        )  # Taking MCOIN allocation to dummy LP in chef v1 as mco per block for chef V2
         totalWeeklyRewardRate = (
             3600 * 24 * 7 * totalSecondRewardRate
         )  # TODO: update to return base 10 values

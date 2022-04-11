@@ -11,10 +11,10 @@ MCMAKER_ADDRESS = "0x7f957BD747BD9537B9C7B222A61485E835B1492D"
 MCBAR_ADDRESS = "0x5F6C8b51fcaff16673134D64A529f1E0Eb995544"
 CHEF_ADDRESS = "0x6FF09C2274d6Fc4826136dA9AC7b9F970086577F"
 CHEFV2_ADDRESS = "0xd616ab1aa6f629cE23476BA6133F47dC58Ddbfa9"
-MC_ADDRESS = "0x00a4d2C1754A0d276dCc26EC4B6d7052fb0DBd73"
-WNEAR_ADDRESS = "0x7bE946EBcb039f494Ec5767006EA37eBfb4906A4"
+MCOIN_ADDRESS = "0x00a4d2C1754A0d276dCc26EC4B6d7052fb0DBd73"
+WNEAR_ADDRESS = "0x7bE946EBcb039f494Ec5767006EA37eBfb4906A4" #using fNEAR on testnet
 AURORA_ADDRESS = "0x8BEc47865aDe3B172A928df8f990Bc7f2A3b9f79"
-USDC_ADDRESS = "0x61106e8ee4d7DA217fCB1868F3c6123F08b7bcAE"
+USDC_ADDRESS = "0x61106e8ee4d7DA217fCB1868F3c6123F08b7bcAE" #using fUSDC on testnet
 USDT_ADDRESS = "0x4988a896b1227218e4A686fdE5EabdcAbd91571f"
 WETH_ADDRESS = "0xC9BdeEd33CD01541e1eeD10f90519d2C06Fe3feB"
 WBTC_ADDRESS = "0xF4eB217Ba2454613b15dBdea6e5f22276410e89e"
@@ -69,7 +69,7 @@ def init_tlp(w3, lpAddress):
             abi=json.load(json_file)
         )
 
-def init_tri_maker(w3):
+def init_mc_maker(w3):
     with open('abi/triMaker.json') as json_file:
         return w3.eth.contract(
             address=MCMAKER_ADDRESS,
@@ -123,8 +123,8 @@ def getReserveInUsdc(w3, tlp, triUsdcRatio):
             wethReserveInWethUsdcPair = reservesWethUsdc[1]
             usdcReserveInWethUsdcPair = reservesWethUsdc[0]
         return reserveInWeth*usdcReserveInWethUsdcPair/wethReserveInWethUsdcPair
-    elif (t0 == MC_ADDRESS or t1 == MC_ADDRESS ):
-        if t0 == MC_ADDRESS:
+    elif (t0 == MCOIN_ADDRESS or t1 == MCOIN_ADDRESS ):
+        if t0 == MCOIN_ADDRESS:
             reserveInTri = reserves[0]*2
         else:
             reserveInTri = reserves[1]*2
@@ -196,7 +196,7 @@ def getAuroraUsdcRatio(w3, triUsdcRatio):
     t1 = triAuroraPair.functions.token1().call()
     t0 = triAuroraPair.functions.token0().call()
     reserves = triAuroraPair.functions.getReserves().call()
-    if t0 == MC_ADDRESS:
+    if t0 == MCOIN_ADDRESS:
         triAuroraRatio = reserves[1]/reserves[0]
     else:
         triAuroraRatio = reserves[0]/reserves[1]
@@ -230,7 +230,7 @@ def getMetaUsdcRatio(w3, wnearUsdcRatio):
 
 def getTriXTriRatio(w3):
     xtri = init_erc20(w3, MCBAR_ADDRESS)
-    tri = init_erc20(w3, MC_ADDRESS)
+    tri = init_erc20(w3, MCOIN_ADDRESS)
     xtri_supply = xtri.functions.totalSupply().call()
     tri_locked = tri.functions.balanceOf(MCBAR_ADDRESS).call()
     return tri_locked/xtri_supply
@@ -265,25 +265,25 @@ def getAPR(mcUsdRatio, totalRewardRate, totalStakedInUSDC):
         return totalYearlyRewards*100*10**6/(totalStakedInUSDC*mcUsdRatio)
 
 @retry((ValueError), delay=10, tries=5)
-def convertFeesForPair(tri_maker, pair, w3, acct):
-    tri_amount = 0
+def convertFeesForPair(mc_maker, pair, w3, acct):
+    mcoin_amount = 0
     try:
         transaction = {
         'gasPrice': w3.eth.gas_price,
         'nonce': w3.eth.getTransactionCount(acct.address),
         }
-        convert_tranasction = tri_maker.functions.convert(pair[0], pair[1]).buildTransaction(transaction)
+        convert_tranasction = mc_maker.functions.convert(pair[0], pair[1]).buildTransaction(transaction)
         signed = w3.eth.account.sign_transaction(convert_tranasction, acct.key)
         signed_txn = w3.eth.sendRawTransaction(signed.rawTransaction)
         txn_hash = signed_txn.hex()
         receipt = w3.eth.waitForTransactionReceipt(txn_hash, timeout=1200)
         for l in receipt['logs']:
             if (l['topics'][0].hex() == '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef' and l['topics'][2].hex() == "0x000000000000000000000000802119e4e253d5c19aa06a5d567c5a41596d6803"):
-                tri_amount += int(l['data'], 16)
+                mcoin_amount += int(l['data'], 16)
     except ValueError as e:
         if str(e).find('INSUFFICIENT_LIQUIDITY_BURNED') == -1:
             raise e
-    return tri_amount
+    return mcoin_amount
 
 def getAccount(mnemonic):
     # Needed to use `from_mnemonic`
